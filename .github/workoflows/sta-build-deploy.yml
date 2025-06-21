@@ -1,0 +1,18 @@
+name: build-deploy-aws.yml
+on:
+  push:
+    branches:
+      - master
+jobs:
+  call-build:
+    uses: Matheus-Thurler/reusable-workflows/.github/workflows/sta-build.yml@master
+    with:
+      node-version: ${{ vars.node_version }}
+  call-deploy:
+    needs: call-build
+    uses: Matheus-Thurler/reusable-workflows/.github/workflows/sta-deploy.yml@master
+    secrets:
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
